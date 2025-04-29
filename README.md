@@ -1,73 +1,85 @@
-# Welcome to your Lovable project
+# CafeConnect - PC Rental Management System
 
-## Project info
+CafeConnect is a complete system for internet cafes to manage PC rentals with automatic password generation, machine monitoring, and realtime status updates.
 
-**URL**: https://lovable.dev/projects/898dfde8-0276-4eb3-8ba1-29fb39550c00
+## Features
 
-## How can I edit this code?
+- User account creation and credit management
+- Realtime machine status monitoring
+- Automatic password generation for rentals
+- Admin dashboard to manage machines and sessions
+- Windows agent for automatic machine registration and command execution
 
-There are several ways of editing your application.
+## Architecture
 
-**Use Lovable**
+The system consists of three main components:
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/898dfde8-0276-4eb3-8ba1-29fb39550c00) and start prompting.
+1. **React Frontend**: User and admin interfaces
+2. **Supabase Backend**: Database, authentication, and realtime updates
+3. **Windows Agent**: Runs on each cafe PC to register with the system and execute commands
 
-Changes made via Lovable will be committed automatically to this repo.
+## Setting Up the Windows Agent
 
-**Use your preferred IDE**
+To set up the Windows agent on cafe PCs:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+1. Navigate to the `/agent` directory
+2. Copy the `.env.example` file to `.env`
+3. Edit the `.env` file with your Supabase credentials:
+   ```
+   SUPABASE_URL=your_supabase_url
+   SERVICE_ROLE_KEY=your_service_role_key
+   ```
+4. Install the dependencies:
+   ```
+   npm install
+   ```
+5. Install and start the Windows service (requires admin privileges):
+   ```
+   npm run install-service
+   ```
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+Once installed, the agent will:
 
-Follow these steps:
+1. Register the machine with your Supabase backend
+2. Listen for commands from the Supabase realtime API
+3. Execute password changes when rentals start
+4. Allow locking the workstation remotely
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+> **Important**: Each PC needs a local Windows user account named `café_user` that customers will use. The agent will change its password when rentals begin.
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+## Development Setup
 
-# Step 3: Install the necessary dependencies.
-npm i
+To set up the development environment:
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+1. Clone the repository
+2. Install dependencies:
+   ```
+   npm install
+   ```
+3. Start the development server:
+   ```
+   npm run dev
+   ```
+
+## Database Migrations
+
+The Supabase database schema is defined in migration files in the `supabase/migrations` directory. Apply them using the Supabase CLI:
+
+```
+supabase db push
 ```
 
-**Edit a file directly in GitHub**
+## Production Deployment
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+For production deployment:
 
-**Use GitHub Codespaces**
+1. Build the React app:
+   ```
+   npm run build
+   ```
+2. Deploy the built files to your hosting provider
+3. Install the Windows agent on each cafe PC
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## License
 
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/898dfde8-0276-4eb3-8ba1-29fb39550c00) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+MIT
