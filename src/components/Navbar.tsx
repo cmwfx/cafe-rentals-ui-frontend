@@ -1,9 +1,11 @@
 
-import { isLoggedIn, currentUser } from "@/data/mockData";
 import { Link } from "react-router-dom";
 import Button from "./Button";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
+  const { user, signOut, loading, isAdmin } = useAuth();
+
   return (
     <nav className="bg-white shadow-sm">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,19 +16,34 @@ const Navbar = () => {
             </Link>
           </div>
           <div className="flex items-center space-x-4">
-            {isLoggedIn ? (
+            {!loading && user ? (
               <div className="flex items-center space-x-4">
+                {!isAdmin && (
+                  <div className="hidden md:flex items-center">
+                    <Link to="/dashboard">Dashboard</Link>
+                  </div>
+                )}
+                {isAdmin && (
+                  <div className="hidden md:flex items-center">
+                    <Link to="/admin-dashboard">Admin Dashboard</Link>
+                  </div>
+                )}
                 <div className="hidden md:flex items-center">
                   <span className="text-sm text-gray-600 mr-2">Credit:</span>
                   <span className="text-sm font-medium text-cafe-blue">
-                    ${currentUser.creditBalance.toFixed(2)}
+                    ${user.user_metadata?.credit_balance?.toFixed(2) || "0.00"}
                   </span>
                 </div>
-                <Link to="/profile">
-                  <Button variant="outline" size="sm">
-                    {currentUser.displayName}
+                <div className="flex items-center space-x-2">
+                  <Link to="/profile">
+                    <Button variant="outline" size="sm">
+                      {user.user_metadata?.display_name || user.email}
+                    </Button>
+                  </Link>
+                  <Button variant="primary" size="sm" onClick={signOut}>
+                    Log out
                   </Button>
-                </Link>
+                </div>
               </div>
             ) : (
               <div className="flex items-center space-x-2">
