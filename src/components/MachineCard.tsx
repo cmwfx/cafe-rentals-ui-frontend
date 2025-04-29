@@ -5,9 +5,10 @@ import Button from "./Button";
 
 interface MachineCardProps {
   machine: Machine;
+  showRentButton?: boolean;
 }
 
-const MachineCard = ({ machine }: MachineCardProps) => {
+const MachineCard = ({ machine, showRentButton = false }: MachineCardProps) => {
   const { id, name, status, specs, hourlyRate } = machine;
 
   return (
@@ -28,15 +29,15 @@ const MachineCard = ({ machine }: MachineCardProps) => {
         <p className="text-sm text-gray-600 mb-4">{specs}</p>
         <div className="flex justify-between items-center">
           <p className="text-cafe-blue font-medium">${hourlyRate}/hour</p>
-          {status === "available" ? (
+          {showRentButton && status === "available" ? (
             <Link to={`/rent/${id}`}>
               <Button size="sm">Rent Now</Button>
             </Link>
-          ) : (
+          ) : status !== "available" ? (
             <Button size="sm" variant="secondary" disabled>
               Unavailable
             </Button>
-          )}
+          ) : null}
         </div>
       </div>
     </div>
