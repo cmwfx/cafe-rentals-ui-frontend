@@ -9,13 +9,63 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          credit_balance: number
+          display_name: string | null
+          id: string
+        }
+        Insert: {
+          credit_balance?: number
+          display_name?: string | null
+          id: string
+        }
+        Update: {
+          credit_balance?: number
+          display_name?: string | null
+          id?: string
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          id: string
+          ts: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          id?: string
+          ts?: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          id?: string
+          ts?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      add_user_credit: {
+        Args: { user_uuid: string; add_amount: number }
+        Returns: undefined
+      }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          is_admin: boolean
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
